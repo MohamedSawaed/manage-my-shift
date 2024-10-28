@@ -1,0 +1,90 @@
+/* Home Page Container */
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #43a047, #66bb6a);
+    color: #ffffff;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    padding: 2em;
+    box-sizing: border-box;
+    animation: fadeIn 1.5s ease-out;
+  }
+  
+  /* Fade-in Animation for Home Page */
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Header Styling */
+  .home h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1.5em;
+    color: #ffffff;
+    text-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    animation: slideDown 2s ease;
+  }
+  
+  /* Slide-down Animation for Header */
+  @keyframes slideDown {
+    0% { opacity: 0; transform: translateY(-50px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Button Styling */
+  .home button {
+    background-color: #ffffff;
+    color: #388e3c;
+    padding: 1em 2.5em;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    margin: 0.5em;
+    cursor: pointer;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .home button:hover {
+    background-color: #f0f0f0;
+    color: #2e7d32;
+    transform: translateY(-5px);
+    box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Active button state for click feedback */
+  .home button:active {
+    transform: translateY(2px);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .home h1 {
+      font-size: 2.5rem;
+    }
+  
+    .home button {
+      width: 80%;
+      padding: 1em;
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .home h1 {
+      font-size: 2rem;
+    }
+  
+    .home button {
+      width: 90%;
+      font-size: 0.9rem;
+    }
+  }
+  

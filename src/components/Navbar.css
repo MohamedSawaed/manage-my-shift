@@ -1,0 +1,80 @@
+/* Navbar Container */
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2em;
+    padding: 1em 2em;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #2e7d32, #66bb6a);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+  }
+  
+  /* Navbar Button Styling */
+  .navbar button {
+    background: none;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    position: relative;
+    cursor: pointer;
+    padding: 0.5em 1em;
+    transition: color 0.3s ease;
+    outline: none;
+  }
+  
+  .navbar button:hover {
+    color: #ffeb3b; /* Highlight color on hover */
+  }
+  
+  /* Animated Underline */
+  .navbar button::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #ffeb3b;
+    transition: width 0.3s ease, left 0.3s ease;
+  }
+  
+  .navbar button:hover::after {
+    width: 100%;
+    left: 0;
+  }
+  
+  /* Button Active State */
+  .navbar button:active {
+    color: #ffeb3b;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .navbar {
+      gap: 1em;
+      padding: 0.8em 1em;
+    }
+  
+    .navbar button {
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .navbar {
+      flex-direction: column;
+      gap: 0.5em;
+    }
+  
+    .navbar button {
+      font-size: 0.9rem;
+      padding: 0.5em 0;
+    }
+  }
+  

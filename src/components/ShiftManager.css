@@ -1,0 +1,51 @@
+:root {
+  --background-color: #ffffff;
+  --text-color: #333;
+  --button-background: #4CAF50;
+  --button-text-color: #ffffff;
+  --header-background: #f1f1f1;
+  --note-background: #fff8e1;
+}
+
+[data-theme="dark"] {
+  --background-color: #1e1e1e;
+  --text-color: #f5f5f5;
+  --button-background: #6c757d;
+  --button-text-color: #ffffff;
+  --header-background: #333;
+  --note-background: #2a2a2a;
+}
+
+/* Apply the variables */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.shift-manager {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.screenshot-header,
+.notes-section,
+.shift {
+  background-color: var(--header-background);
+  border: 1px solid #ddd;
+  color: var(--text-color);
+}
+
+.assign-button,
+.screenshot-button,
+.toggle-dark-mode {
+  background-color: var(--button-background);
+  color: var(--button-text-color);
+  border: none;
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.notes-section {
+  background-color: var(--note-background);
+}
