@@ -14,7 +14,7 @@ const ShiftManager = ({ departments, workers }) => {
   const [selectedWorker, setSelectedWorker] = useState('');
   const [selectedShift, setSelectedShift] = useState('morning');
   const [selectedPrefix, setSelectedPrefix] = useState('');
-  const [assignedWorkers, setAssignedWorkers] = useState(new Set(loadFromLocalStorage('assignedWorkers') || []));
+  const [assignedWorkers, setAssignedWorkers] = useState(loadFromLocalStorage('assignedWorkers') || []);
   const [notes, setNotes] = useState(loadFromLocalStorage('shiftNotes') || {
     morning: '',
     evening: '',
@@ -22,7 +22,6 @@ const ShiftManager = ({ departments, workers }) => {
   });
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  // Get the current date formatted as DD/MM/YYYY
   const currentDate = new Date().toLocaleDateString('en-GB');
 
   const shiftRefs = {
@@ -37,7 +36,7 @@ const ShiftManager = ({ departments, workers }) => {
   }, [shifts, workerTimes]);
 
   useEffect(() => {
-    saveToLocalStorage('assignedWorkers', Array.from(assignedWorkers));
+    saveToLocalStorage('assignedWorkers', assignedWorkers);
   }, [assignedWorkers]);
 
   useEffect(() => {
@@ -87,7 +86,7 @@ const ShiftManager = ({ departments, workers }) => {
       initializeWorkerTime(uniqueWorkerName, selectedShift);
 
       if (!isContractWorker) {
-        setAssignedWorkers((prev) => new Set(prev).add(selectedWorker));
+        setAssignedWorkers((prev) => [...prev, selectedWorker]);
       }
       setSelectedWorker('');
 
@@ -142,14 +141,11 @@ const ShiftManager = ({ departments, workers }) => {
       const updatedShift = { ...prev[shift] };
       const workersToUnassign = updatedShift[department] || [];
 
-      // Remove the department from the shift
       delete updatedShift[department];
 
-      // Update assignedWorkers to make the workers available again
-      setAssignedWorkers((prevAssigned) => {
-        const updatedAssigned = new Set(prevAssigned);
-        workersToUnassign.forEach((worker) => updatedAssigned.delete(worker.split(' ')[1]));
-        return updatedAssigned;
+      // Update assignedWorkers to make workers available again
+      setAssignedWorkers((prev) => {
+        return prev.filter(worker => !workersToUnassign.includes(worker));
       });
 
       return { ...prev, [shift]: updatedShift };
@@ -166,15 +162,11 @@ const ShiftManager = ({ departments, workers }) => {
     }));
 
     const isContractWorker = worker.includes("עובד קבלן");
-    const workerName = worker.split(' ')[1]; // Extract the worker name
+    const workerName = worker.split(' ')[1];
 
-    // Update assignedWorkers to make the worker available again
+    // Make the worker available again in assignedWorkers
     if (!isContractWorker) {
-      setAssignedWorkers((prev) => {
-        const updatedWorkers = new Set(prev);
-        updatedWorkers.delete(workerName);
-        return updatedWorkers;
-      });
+      setAssignedWorkers((prev) => prev.filter(w => w !== workerName));
     }
   };
 
@@ -197,7 +189,7 @@ const ShiftManager = ({ departments, workers }) => {
     return acc;
   }, {});
 
-  const availableWorkers = ["עובד קבלן", ...workers.filter((worker) => !assignedWorkers.has(worker))];
+  const availableWorkers = ["עובד קבלן", ...workers.filter((worker) => !assignedWorkers.includes(worker))];
   
   const isAssignDisabled = !(selectedPrefix && selectedDepartment && selectedWorker);
 
@@ -211,8 +203,6 @@ const ShiftManager = ({ departments, workers }) => {
         <option value="Dough">בצק</option>
         <option value="Machine">מכונה</option>
         <option value="Packing">אריזה</option>
-        <option value="Packing">פירוק</option>
-        <option value="Packing">ניקיון</option>
       </select>
 
       <select onChange={(e) => setSelectedDepartment(e.target.value)} value={selectedDepartment}>
