@@ -22,6 +22,9 @@ const ShiftManager = ({ departments, workers }) => {
   });
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
+  // Get the current date formatted as DD/MM/YYYY
+  const currentDate = new Date().toLocaleDateString('en-GB');
+
   const shiftRefs = {
     morning: useRef(null),
     evening: useRef(null),
@@ -53,7 +56,6 @@ const ShiftManager = ({ departments, workers }) => {
     night: { start: '18:50', end: '6:50' }
   };
 
-  // Initialize workerTimes with default times if missing
   const initializeWorkerTime = (worker, shift) => {
     const defaultTime = shiftDefaultTimes[shift];
     setWorkerTimes((prev) => ({
@@ -82,7 +84,6 @@ const ShiftManager = ({ departments, workers }) => {
         }
       }));
 
-      // Initialize workerTimes for the newly assigned worker
       initializeWorkerTime(uniqueWorkerName, selectedShift);
 
       if (!isContractWorker) {
@@ -189,14 +190,13 @@ const ShiftManager = ({ departments, workers }) => {
   }, {});
 
   const availableWorkers = ["עובד קבלן", ...workers.filter((worker) => !assignedWorkers.has(worker))];
-
-  const currentDate = new Date().toLocaleDateString();
-
+  
   const isAssignDisabled = !(selectedPrefix && selectedDepartment && selectedWorker);
 
   return (
     <div className="shift-manager">
       <h2>סידור עבודה</h2>
+      <p>{currentDate}</p>
       
       <select onChange={(e) => setSelectedPrefix(e.target.value)} value={selectedPrefix}>
         <option value="">בחר קידומת</option>
@@ -253,6 +253,7 @@ const ShiftManager = ({ departments, workers }) => {
               {shiftTimings[shiftName]}
             </span>
           </h3>
+          <p>{currentDate}</p> {/* Display the date within each shift section for screenshot */}
           <div className="shift-columns">
             {Object.entries(departments).map(([department, workers]) => (
               <div key={department} className="shift-column">
