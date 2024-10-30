@@ -68,9 +68,7 @@ const ShiftManager = ({ departments, workers }) => {
 
   const handleAssign = () => {
     if (selectedDepartment && selectedWorker && selectedPrefix) {
-      const isContractWorker = selectedWorker === "עובד קבלן";
       const prefixedWorker = `${prefixOptions[selectedPrefix]} ${selectedWorker}`;
-      const uniqueWorkerName = isContractWorker ? `${prefixedWorker}-${Date.now()}` : prefixedWorker;
 
       setShifts((prev) => ({
         ...prev,
@@ -78,16 +76,15 @@ const ShiftManager = ({ departments, workers }) => {
           ...prev[selectedShift],
           [selectedDepartment]: [
             ...(prev[selectedShift][selectedDepartment] || []),
-            uniqueWorkerName
+            prefixedWorker
           ]
         }
       }));
 
-      initializeWorkerTime(uniqueWorkerName, selectedShift);
+      initializeWorkerTime(prefixedWorker, selectedShift);
 
-      if (!isContractWorker) {
-        setAssignedWorkers((prev) => [...prev, selectedWorker]);
-      }
+      // Add worker to assignedWorkers to prevent re-selection
+      setAssignedWorkers((prev) => [...prev, selectedWorker]);
       setSelectedWorker('');
 
       setShowSuccessMessage(true);
@@ -143,10 +140,10 @@ const ShiftManager = ({ departments, workers }) => {
 
       delete updatedShift[department];
 
-      // Update assignedWorkers to make workers available again
-      setAssignedWorkers((prev) => {
-        return prev.filter(worker => !workersToUnassign.includes(worker));
-      });
+      // Make all workers from this department available again
+      setAssignedWorkers((prev) =>
+        prev.filter((worker) => !workersToUnassign.some((w) => w.includes(worker)))
+      );
 
       return { ...prev, [shift]: updatedShift };
     });
@@ -161,13 +158,9 @@ const ShiftManager = ({ departments, workers }) => {
       }
     }));
 
-    const isContractWorker = worker.includes("עובד קבלן");
     const workerName = worker.split(' ')[1];
-
-    // Make the worker available again in assignedWorkers
-    if (!isContractWorker) {
-      setAssignedWorkers((prev) => prev.filter(w => w !== workerName));
-    }
+    // Make the worker available again
+    setAssignedWorkers((prev) => prev.filter((w) => w !== workerName));
   };
 
   const shiftNames = {
