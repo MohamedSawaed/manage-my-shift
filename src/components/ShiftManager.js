@@ -140,7 +140,18 @@ const ShiftManager = ({ departments, workers }) => {
   const handleDeleteDepartmentFromShift = (shift, department) => {
     setShifts((prev) => {
       const updatedShift = { ...prev[shift] };
+      const workersToUnassign = updatedShift[department] || [];
+
+      // Remove the department from the shift
       delete updatedShift[department];
+
+      // Update assignedWorkers to make the workers available again
+      setAssignedWorkers((prevAssigned) => {
+        const updatedAssigned = new Set(prevAssigned);
+        workersToUnassign.forEach((worker) => updatedAssigned.delete(worker.split(' ')[1]));
+        return updatedAssigned;
+      });
+
       return { ...prev, [shift]: updatedShift };
     });
   };
@@ -155,19 +166,16 @@ const ShiftManager = ({ departments, workers }) => {
     }));
 
     const isContractWorker = worker.includes("עובד קבלן");
+    const workerName = worker.split(' ')[1]; // Extract the worker name
+
+    // Update assignedWorkers to make the worker available again
     if (!isContractWorker) {
       setAssignedWorkers((prev) => {
         const updatedWorkers = new Set(prev);
-        updatedWorkers.delete(worker.split(' ')[1]);
+        updatedWorkers.delete(workerName);
         return updatedWorkers;
       });
     }
-
-    setWorkerTimes((prev) => {
-      const updatedTimes = { ...prev };
-      delete updatedTimes[worker];
-      return updatedTimes;
-    });
   };
 
   const shiftNames = {
@@ -203,6 +211,8 @@ const ShiftManager = ({ departments, workers }) => {
         <option value="Dough">בצק</option>
         <option value="Machine">מכונה</option>
         <option value="Packing">אריזה</option>
+        <option value="Packing">פירוק</option>
+        <option value="Packing">ניקיון</option>
       </select>
 
       <select onChange={(e) => setSelectedDepartment(e.target.value)} value={selectedDepartment}>
@@ -253,7 +263,7 @@ const ShiftManager = ({ departments, workers }) => {
               {shiftTimings[shiftName]}
             </span>
           </h3>
-          <p>{currentDate}</p> {/* Display the date within each shift section for screenshot */}
+          <p>{currentDate}</p>
           <div className="shift-columns">
             {Object.entries(departments).map(([department, workers]) => (
               <div key={department} className="shift-column">
